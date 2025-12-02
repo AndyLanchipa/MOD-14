@@ -67,8 +67,7 @@ class TestCalculationPositive:
         page.click("#create-calc-btn")
 
         page.wait_for_function(
-            "document.querySelector('.calculations-table') !== null",
-            timeout=10000
+            "document.querySelector('.calculations-table') !== null", timeout=10000
         )
 
         expect(page.locator(".calculation-expression").first).to_contain_text(
@@ -133,7 +132,7 @@ class TestCalculationPositive:
             page.wait_for_function(
                 f"document.querySelectorAll('.calculations-table tbody tr')"
                 f".length >= {i + 1}",
-                timeout=10000
+                timeout=10000,
             )
 
         calculations_rows = page.locator(".calculations-table tbody tr")
