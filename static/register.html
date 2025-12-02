@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Calculation API</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="auth-card">
+            <h1>Create Account</h1>
+            <p class="subtitle">Register to start using the Calculation API</p>
+            
+            <div id="message-container" class="message-container" style="display: none;">
+                <p id="message-text"></p>
+            </div>
+
+            <form id="register-form" novalidate>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        required 
+                        minlength="3" 
+                        maxlength="50"
+                        pattern="^[a-zA-Z0-9_]+$"
+                        placeholder="Enter your username"
+                    >
+                    <div class="error-message" id="username-error"></div>
+                    <small class="input-hint">3-50 characters, alphanumeric and underscore only</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required
+                        placeholder="Enter your email"
+                    >
+                    <div class="error-message" id="email-error"></div>
+                    <small class="input-hint">Valid email address required</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required
+                        minlength="8"
+                        placeholder="Enter your password"
+                    >
+                    <div class="error-message" id="password-error"></div>
+                    <small class="input-hint">Minimum 8 characters, at least 1 uppercase, 1 lowercase, and 1 digit</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input 
+                        type="password" 
+                        id="confirm-password" 
+                        name="confirm-password" 
+                        required
+                        placeholder="Confirm your password"
+                    >
+                    <div class="error-message" id="confirm-password-error"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submit-btn">
+                    Register
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="/static/login.html">Login here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initRegisterPage();
+        });
+    </script>
+</body>
+</html>
