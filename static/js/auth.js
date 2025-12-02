@@ -799,11 +799,12 @@ function initCalculationForm() {
             
             await createCalculation(a, b, type);
             
-            showMessage('Calculation created successfully', 'success');
             form.reset();
             previewDiv.style.display = 'none';
             
             await loadCalculations(currentPage);
+            
+            showMessage('Calculation created successfully', 'success');
             
         } catch (error) {
             console.error('Error creating calculation:', error);
