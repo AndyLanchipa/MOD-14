@@ -67,6 +67,7 @@ class TestCalculationPositive:
         page.click("#create-calc-btn")
 
         expect(page.locator("#message-container")).to_be_visible(timeout=3000)
+        expect(page.locator(".calculations-table")).to_be_visible(timeout=3000)
         expect(page.locator(".calculation-expression").first).to_contain_text("20 - 8")
         expect(page.locator(".calculation-result").first).to_contain_text("12")
 
@@ -121,8 +122,10 @@ class TestCalculationPositive:
             page.select_option("#operation-type", op)
             page.fill("#operand-b", b)
             page.click("#create-calc-btn")
-            page.wait_for_timeout(500)
+            expect(page.locator("#message-container")).to_be_visible(timeout=3000)
+            page.wait_for_timeout(1000)
 
+        expect(page.locator(".calculations-table")).to_be_visible(timeout=3000)
         calculations_rows = page.locator(".calculations-table tbody tr")
         expect(calculations_rows).to_have_count(3)
 
