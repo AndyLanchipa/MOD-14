@@ -2,6 +2,8 @@
 
 A robust FastAPI application for mathematical calculations with user management, built with SQLAlchemy and comprehensive testing.
 
+**Docker Hub**: [andylanchipa/calculation-app](https://hub.docker.com/r/andylanchipa/calculation-app)
+
 ## Module 13 Features
 
 This module implements complete JWT-based authentication with front-end interface and end-to-end testing:
