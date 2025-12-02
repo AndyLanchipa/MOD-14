@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Calculation API</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-card">
+            <div class="dashboard-header">
+                <h1>Dashboard</h1>
+                <button id="logout-btn" class="btn btn-secondary">Logout</button>
+            </div>
+
+            <div id="message-container" class="message-container" style="display: none;">
+                <p id="message-text"></p>
+            </div>
+
+            <div class="user-info-section">
+                <h2>User Information</h2>
+                <div id="user-info" class="user-info">
+                    <p><strong>Loading user information...</strong></p>
+                </div>
+            </div>
+
+            <div class="calculations-section">
+                <h2>Your Calculations</h2>
+                
+                <!-- Calculation Creation Form -->
+                <div class="calculation-form-container">
+                    <h3>Create New Calculation</h3>
+                    <form id="calculation-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="operand-a">Operand A</label>
+                                <input type="number" id="operand-a" name="a" step="any" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="operation-type">Operation</label>
+                                <select id="operation-type" name="type" required>
+                                    <option value="">Select Operation</option>
+                                    <option value="ADD">Addition (+)</option>
+                                    <option value="SUBTRACT">Subtraction (-)</option>
+                                    <option value="MULTIPLY">Multiplication (×)</option>
+                                    <option value="DIVIDE">Division (÷)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="operand-b">Operand B</label>
+                                <input type="number" id="operand-b" name="b" step="any" required>
+                            </div>
+                        </div>
+                        <div id="calculation-preview" class="calculation-preview" style="display: none;"></div>
+                        <button type="submit" id="create-calc-btn" class="btn btn-primary">Create Calculation</button>
+                    </form>
+                </div>
+
+                <!-- Calculations List -->
+                <div class="calculations-list-container">
+                    <h3>My Calculations</h3>
+                    <div id="calculations-list-loading" class="loading-spinner" style="display: none;">
+                        Loading calculations...
+                    </div>
+                    <div id="calculations-list"></div>
+                    <div id="pagination-controls" class="pagination-controls" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Edit Calculation Modal -->
+            <div id="edit-modal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Edit Calculation</h3>
+                        <span class="modal-close">&times;</span>
+                    </div>
+                    <form id="edit-calculation-form">
+                        <input type="hidden" id="edit-calc-id">
+                        <div class="form-group">
+                            <label for="edit-operand-a">Operand A</label>
+                            <input type="number" id="edit-operand-a" name="a" step="any" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-operation-type">Operation</label>
+                            <select id="edit-operation-type" name="type" required>
+                                <option value="ADD">Addition (+)</option>
+                                <option value="SUBTRACT">Subtraction (-)</option>
+                                <option value="MULTIPLY">Multiplication (×)</option>
+                                <option value="DIVIDE">Division (÷)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-operand-b">Operand B</label>
+                            <input type="number" id="edit-operand-b" name="b" step="any" required>
+                        </div>
+                        <div id="edit-calculation-preview" class="calculation-preview" style="display: none;"></div>
+                        <div class="modal-actions">
+                            <button type="button" class="btn btn-secondary modal-cancel">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Update Calculation</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Delete Confirmation Modal -->
+            <div id="delete-modal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Confirm Delete</h3>
+                        <span class="modal-close">&times;</span>
+                    </div>
+                    <p>Are you sure you want to delete this calculation?</p>
+                    <div id="delete-calc-info" class="delete-info"></div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary modal-cancel">Cancel</button>
+                        <button type="button" id="confirm-delete-btn" class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initDashboardPage();
+        });
+    </script>
+</body>
+</html>
