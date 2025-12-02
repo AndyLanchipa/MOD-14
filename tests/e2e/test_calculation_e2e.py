@@ -66,10 +66,17 @@ class TestCalculationPositive:
 
         page.click("#create-calc-btn")
 
-        page.wait_for_timeout(1500)
-        expect(page.locator(".calculations-table")).to_be_visible(timeout=5000)
-        expect(page.locator(".calculation-expression").first).to_contain_text("20 - 8")
-        expect(page.locator(".calculation-result").first).to_contain_text("12")
+        page.wait_for_function(
+            "document.querySelector('.calculations-table') !== null",
+            timeout=10000
+        )
+
+        expect(page.locator(".calculation-expression").first).to_contain_text(
+            "20 - 8", timeout=5000
+        )
+        expect(page.locator(".calculation-result").first).to_contain_text(
+            "12", timeout=5000
+        )
 
     def test_create_calculation_multiplication(self, page: Page, unique_user_data):
         """Test successful creation of a multiplication calculation."""
@@ -117,16 +124,20 @@ class TestCalculationPositive:
             ("6", "MULTIPLY", "7"),
         ]
 
-        for a, op, b in calculations:
+        for i, (a, op, b) in enumerate(calculations):
             page.fill("#operand-a", a)
             page.select_option("#operation-type", op)
             page.fill("#operand-b", b)
             page.click("#create-calc-btn")
-            page.wait_for_timeout(1500)
 
-        expect(page.locator(".calculations-table")).to_be_visible(timeout=5000)
+            page.wait_for_function(
+                f"document.querySelectorAll('.calculations-table tbody tr')"
+                f".length >= {i + 1}",
+                timeout=10000
+            )
+
         calculations_rows = page.locator(".calculations-table tbody tr")
-        expect(calculations_rows).to_have_count(3)
+        expect(calculations_rows).to_have_count(3, timeout=5000)
 
     def test_edit_calculation(self, page: Page, unique_user_data):
         """Test editing an existing calculation."""
