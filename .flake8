@@ -1,0 +1,10 @@
+[flake8]
+exclude =
+    .git,
+    __pycache__,
+    venv,
+    .mypy_cache,
+    alembic/versions/__pycache__
+max-line-length = 88
+per-file-ignores =
+    alembic/env.py: E402, F401
