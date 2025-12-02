@@ -526,7 +526,7 @@ let currentDeleteId = null;
 function getOperationSymbol(type) {
     const symbols = {
         'ADD': '+',
-        'SUBTRACT': '-',
+        'SUB': '-',
         'MULTIPLY': '×',
         'DIVIDE': '÷'
     };
@@ -536,7 +536,7 @@ function getOperationSymbol(type) {
 function getOperationName(type) {
     const names = {
         'ADD': 'Addition',
-        'SUBTRACT': 'Subtraction',
+        'SUB': 'Subtraction',
         'MULTIPLY': 'Multiplication',
         'DIVIDE': 'Division'
     };

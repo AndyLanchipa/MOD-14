@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.database import Base, engine
-from app.models import calculation_model, user_model
+from app.models import calculation_model, user_model  # noqa: F401
 from app.routers import calculation_routes, user_routes
 
 # Create tables if they don't exist (for Docker/local dev)

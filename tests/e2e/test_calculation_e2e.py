@@ -61,14 +61,20 @@ class TestCalculationPositive:
         register_and_login(page, unique_user_data)
 
         page.fill("#operand-a", "20")
-        page.select_option("#operation-type", "SUBTRACT")
+        page.select_option("#operation-type", "SUB")
         page.fill("#operand-b", "8")
 
-        page.click("#create-calc-btn")
+        with page.expect_response(
+            lambda response: "/api/calculations" in response.url
+            and response.request.method == "POST"
+        ) as response_info:
+            page.click("#create-calc-btn")
 
-        page.wait_for_function(
-            "document.querySelector('.calculations-table') !== null", timeout=10000
-        )
+        response = response_info.value
+        assert response.status == 201
+
+        page.wait_for_load_state("networkidle")
+        page.wait_for_timeout(1000)
 
         expect(page.locator(".calculation-expression").first).to_contain_text(
             "20 - 8", timeout=5000
@@ -119,21 +125,23 @@ class TestCalculationPositive:
 
         calculations = [
             ("10", "ADD", "5"),
-            ("20", "SUBTRACT", "8"),
+            ("20", "SUB", "8"),
             ("6", "MULTIPLY", "7"),
         ]
 
-        for i, (a, op, b) in enumerate(calculations):
+        for a, op, b in calculations:
             page.fill("#operand-a", a)
             page.select_option("#operation-type", op)
             page.fill("#operand-b", b)
-            page.click("#create-calc-btn")
 
-            page.wait_for_function(
-                f"document.querySelectorAll('.calculations-table tbody tr')"
-                f".length >= {i + 1}",
-                timeout=10000,
-            )
+            with page.expect_response(
+                lambda response: "/api/calculations" in response.url
+                and response.request.method == "POST"
+            ):
+                page.click("#create-calc-btn")
+
+            page.wait_for_load_state("networkidle")
+            page.wait_for_timeout(1000)
 
         calculations_rows = page.locator(".calculations-table tbody tr")
         expect(calculations_rows).to_have_count(3, timeout=5000)
