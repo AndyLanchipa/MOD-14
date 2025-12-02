@@ -73,11 +73,27 @@ function validateUsername(username) {
 function showMessage(message, type = 'error') {
     const messageContainer = document.getElementById('message-container');
     const messageText = document.getElementById('message-text');
-    
+
+    function formatMessage(msg) {
+        if (typeof msg === 'string') return msg;
+        if (Array.isArray(msg)) {
+            // Pydantic/validation errors array
+            return msg
+                .map((m) => m?.msg || m?.message || (typeof m === 'string' ? m : JSON.stringify(m)))
+                .join('; ');
+        }
+        if (msg && typeof msg === 'object') {
+            // FastAPI error shape {detail: ...}
+            if (msg.detail) return formatMessage(msg.detail);
+            return JSON.stringify(msg);
+        }
+        return String(msg);
+    }
+
     messageContainer.className = `message-container ${type}`;
-    messageText.textContent = message;
+    messageText.textContent = formatMessage(message);
     messageContainer.style.display = 'block';
-    
+
     setTimeout(() => {
         messageContainer.style.display = 'none';
     }, 5000);
@@ -447,16 +463,30 @@ async function createCalculation(a, b, type) {
     const token = getToken();
     if (!token) throw new Error('No authentication token found');
     
+   console.log("Creating calculation with a:", a, "b:", b, "type:", type);
+    
+    // Normalize legacy operation values from UI or cached DOM
+    const normalizedType = (function(t){
+        if (t === 'SUBTRACT') return 'SUB';
+        return t;
+    })(type);
+
+    console.log("Normalized type:", normalizedType);
+    const requestBody = { a: parseFloat(a), b: parseFloat(b), type: normalizedType };
+    console.log("Request body:", JSON.stringify(requestBody));
+    console.log("================================");
+    
     const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.calculations}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ a: parseFloat(a), b: parseFloat(b), type })
+        body: JSON.stringify(requestBody)
     });
     
     const data = await response.json();
+    console.log("API Response:", data);
     if (!response.ok) throw { status: response.status, data };
     return data;
 }
@@ -554,7 +584,7 @@ function calculatePreview(a, b, type) {
         case 'ADD':
             result = numA + numB;
             break;
-        case 'SUBTRACT':
+        case 'SUB':
             result = numA - numB;
             break;
         case 'MULTIPLY':
@@ -699,7 +729,7 @@ function handleEditClick(event) {
     let type = 'ADD';
     switch (symbol) {
         case '+': type = 'ADD'; break;
-        case '-': type = 'SUBTRACT'; break;
+        case '-': type = 'SUB'; break;
         case '×': type = 'MULTIPLY'; break;
         case '÷': type = 'DIVIDE'; break;
     }
@@ -786,7 +816,15 @@ function initCalculationForm() {
         
         const a = operandA.value;
         const b = operandB.value;
-        const type = operationType.value;
+        let type = operationType.value;
+        
+        console.log("Form submission - original type:", type);
+        
+        // Normalize type early in case of cached/old values
+        if (type === 'SUBTRACT') {
+            type = 'SUB';
+            console.log("Form normalized SUBTRACT to SUB");
+        }
         
         if (type === 'DIVIDE' && parseFloat(b) === 0) {
             showMessage('Cannot divide by zero', 'error');
@@ -816,7 +854,7 @@ function initCalculationForm() {
                     window.location.href = '/static/login.html';
                 }, 2000);
             } else {
-                const message = error.data?.detail || 'Failed to create calculation';
+                const message = error.data?.detail || error.data || 'Failed to create calculation';
                 showMessage(message, 'error');
             }
         } finally {

@@ -18,8 +18,9 @@ body {
 
 .container {
     width: 100%;
-    max-width: 500px;
+    max-width: 1100px; /* page container governs max width */
     padding: 20px;
+    min-width: 0; /* allow container to shrink below content size */
 }
 
 /* Auth Card Styles */
@@ -28,11 +29,15 @@ body {
     border-radius: 12px;
     padding: 40px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box; /* include padding in width to avoid visual overflow */
 }
 
 .dashboard-card {
-    max-width: 800px;
+    /* let the dashboard match the container's max width */
     width: 100%;
+    max-width: inherit;
+    overflow-x: auto; /* allow horizontal scroll if content is too wide */
+    overflow-y: visible; /* allow dropdowns and modals to show */
 }
 
 h1 {
@@ -312,6 +317,10 @@ input.success {
 /* Calculations Section Styles */
 .calculations-section {
     margin-top: 30px;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow-x: auto;
 }
 
 .calculations-section h2 {
@@ -331,13 +340,25 @@ input.success {
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 30px;
+    overflow-x: auto; /* allow horizontal scroll if needed */
+    max-width: 100%; /* prevent overflow */
+    box-sizing: border-box; /* include padding in width */
 }
 
 .form-row {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    /* allow items to wrap without overflowing the container */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 15px;
     margin-bottom: 15px;
+}
+
+/* make inputs/selects shrink within their grid cells */
+.form-row input[type="number"],
+.form-row select {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .calculation-preview {
@@ -361,6 +382,10 @@ input.success {
 
 .calculations-list-container {
     margin-top: 20px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto; /* allow horizontal scroll if table gets too wide */
+    box-sizing: border-box;
 }
 
 .loading-spinner {
@@ -381,6 +406,8 @@ input.success {
 
 .calculations-table {
     width: 100%;
+    max-width: 100%; /* constrain to parent container */
+    table-layout: fixed; /* prevent columns from expanding beyond container */
     border-collapse: collapse;
     background: white;
     border-radius: 8px;
@@ -416,11 +443,17 @@ input.success {
     font-family: 'Courier New', monospace;
     font-weight: 500;
     font-size: 15px;
+    word-break: break-word; /* wrap long expressions */
+    overflow-wrap: break-word;
+    min-width: 0; /* allow column to shrink below content size */
 }
 
 .calculation-result {
     font-weight: 600;
     color: #4299e1;
+    word-break: break-all; /* break long decimal numbers to fit column */
+    overflow-wrap: break-word;
+    min-width: 0; /* allow column to shrink below content size */
 }
 
 .calculation-date {
